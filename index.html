@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>21st Century Leadership Assessment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        /* Design System Styles */
+        :root {
+            --primary-color: #81EDFF;
+            --background-color: #EDEAE7;
+            --surface-color: #FFFFFF;
+            --text-primary: #222222;
+            --text-secondary: #666666;
+            --border-light: #DEDEDE;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-top: 2rem;
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* Image Banner */
+        .image-banner {
+            margin-bottom: 3rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 2px solid #82EDFF;
+        }
+
+        .banner-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Start Survey Button */
+        .start-survey-btn {
+            display: block;
+            margin: 0 auto;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            border-radius: 8px;
+            border: 1px solid var(--primary-color);
+            transition: all 200ms ease;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #000000;
+            padding: 0.75rem 2rem;
+            font-size: 1.125rem;
+            line-height: 1.5;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .start-survey-btn:hover:not(:disabled) {
+            background-color: #6BD9EC;
+            border-color: #6BD9EC;
+        }
+
+        .start-survey-btn:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+        .start-survey-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+
+        .progress-text {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: #909090;
+            font-weight: 500;
+            min-width: 70px;
+            text-align: right;
+        }
+
+        /* Category Scores Section */
+        .category-scores {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .category-scores h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .category-result {
+            background-color: #F8F9FA;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .category-header h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .category-percentage {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .category-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--background-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+
+        .category-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: width 500ms ease;
+            border-radius: 4px;
+        }
+
+        .category-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .category-stats span {
+            font-weight: 500;
+        }
+
+        /* Survey Container */
+        .survey-container {
+            max-width: 700px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Survey Header */
+        .survey-header {
+            margin-bottom: 2rem;
+        }
+
+        .survey-header h2 {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #909090;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .progress-bar {
+            width: calc(100% - 80px);
+            height: 8px;
+            background-color: var(--background-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: width 300ms ease;
+        }
+
+        /* Question Container */
+        .question-container {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .question-container h3 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Options Container */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .option-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border-light);
+            border-radius: 8px;
+            background-color: transparent;
+            cursor: pointer;
+            transition: all 200ms ease;
+            text-align: center;
+            min-height: 48px;
+        }
+
+        .option-button:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(129, 237, 255, 0.1);
+        }
+
+        .option-button.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(129, 237, 255, 0.1);
+        }
+
+        .option-label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .option-value {
+            display: none; /* Hide the point values from users */
+        }
+
+        /* Navigation Buttons */
+        .navigation-buttons {
+            background-color: var(--primary-color);
+            color: #000000;
+            background-color: #6BD9EC;
+            border-color: #6BD9EC;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border-color: var(--border-light);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: #F5F5F5;
+            border-color: #CCCCCC;
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Results Container */
+        .results-container {
+            text-align: center;
+        }
+
+        .results-container h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .completion-message {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Score Summary */
+        .score-summary {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .score-percentage {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #000000;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 0.875rem;
+            color: #000000;
+            font-weight: 500;
+        }
+
+        .score-details {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+        }
+
+        .score-details p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Answers Summary */
+        .answers-summary {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .answers-summary h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .answer-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #F5F5F5;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .question-text {
+            flex: 1;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .answer-score {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.875rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .logo {
+                height: 40px;
+                max-width: 100%;
+                display: block;
+                margin: 0 auto;
+            }
+
+            .logo-section {
+                margin-bottom: 1.5rem;
+                padding-top: 1.5rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .banner-image {
+                height: 200px;
+            }
+
+            .start-survey-btn {
+                padding: 0.625rem 1.5rem;
+                font-size: 1rem;
+                border-radius: 8px;
+                display: block;
+                margin: 0 auto;
+            }
+
+            .hero-section {
+                padding: 1rem;
+                flex-direction: column;
+            }
+
+            .survey-container {
+                padding: 1.5rem;
+                margin: 1rem;
+                max-width: 100%;
+            }
+
+            .survey-header h2 {
+                font-size: 0.6875rem;
+                font-weight: 500;
+                color: #909090;
+            }
+
+            .question-container h3 {
+                font-size: 1.125rem;
+            }
+
+            .options-container {
+                max-width: 320px;
+                gap: 0.375rem;
+            }
+
+            .option-button {
+                padding: 0.75rem 0.875rem;
+                min-height: 44px;
+            }
+
+            .option-label {
+                font-size: 0.875rem;
+            }
+
+            .progress-bar-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+
+            .progress-bar {
+                width: 100%;
+            }
+
+            .progress-text {
+                text-align: center;
+                min-width: auto;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+            }
+
+            .score-circle {
+                width: 120px;
+                height: 120px;
+            }
+
+            .score-percentage {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                height: 35px;
+                max-width: 100%;
+                display: block;
+                margin: 0 auto;
+            }
+
+            .logo-section {
+                padding-top: 1rem;
+            }
+
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .banner-image {
+                height: 150px;
+            }
+
+            .survey-container {
+                padding: 1rem;
+            }
+
+            .answer-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const Survey = ({ onComplete }) => {
+            // All categories with their questions
+            const categories = [
+                {
+                    id: 1,
+                    name: "Leadership",
+                    questions: [
+                        "Leaders clearly communicate our organisation's vision and direction.",
+                        "Managers encourage experimentation and accept mistakes as part of learning.",
+                        "Leaders actively develop people's skills and careers.",
+                        "My manager provides regular, constructive feedback.",
+                        "Decision-making authority is delegated to the appropriate level.",
+                        "Leadership behaviour matches the organisation's stated values.",
+                        "Leaders create an environment where diverse perspectives are valued.",
+                        "Leaders demonstrate transparency and honesty in their communication.",
+                        "I see leaders modelling ethical and responsible behaviour.",
+                        "Senior leaders inspire me to do my best work."
+                    ]
+                },
+                {
+                    id: 2,
+                    name: "Innovation",
+                    questions: [
+                        "Employees are encouraged to suggest new ideas and improvements.",
+                        "The organisation provides time or resources to test new ideas.",
+                        "Successful ideas are scaled beyond their initial pilot stage.",
+                        "Innovation initiatives are aligned with our strategic priorities.",
+                        "We celebrate successes and learn openly from failures.",
+                        "Cross-functional teams collaborate effectively on innovation projects.",
+                        "We move quickly from idea to testing to implementation.",
+                        "Innovation is seen as everyone's responsibility, not just R&D.",
+                        "Leaders actively remove barriers to innovation.",
+                        "Our organisation has a clear process for measuring innovation impact."
+                    ]
+                },
+                {
+                    id: 3,
+                    name: "Culture",
+                    questions: [
+                        "People at all levels feel safe to voice opinions without fear of reprisal.",
+                        "Collaboration across departments is encouraged and supported.",
+                        "Our workplace environment supports diversity and inclusion.",
+                        "Recognition is given fairly and frequently for good work.",
+                        "There is a strong sense of shared purpose across the organisation.",
+                        "We respond well to change and adapt quickly.",
+                        "There is open, transparent communication between levels and teams.",
+                        "People feel engaged and motivated to contribute their best.",
+                        "Our culture promotes both high performance and well-being.",
+                        "We hold ourselves accountable for our results."
+                    ]
+                },
+                {
+                    id: 4,
+                    name: "AI Readiness",
+                    questions: [
+                        "People here see AI as a tool to achieve breakthroughs, not just to save time and write emails.",
+                        "Our teams use AI to tackle serious business challenges and seize major opportunities.",
+                        "We actively invest in AI projects that aim for 10× improvements in performance or outcomes.",
+                        "Employees are encouraged and supported to design AI-powered solutions, not only use prebuilt tools.",
+                        "Leadership challenges us to think boldly about how AI can transform our products, services, and processes.",
+                        "We measure AI initiatives by the real impact they deliver (e.g. improvements in revenue, productivity, customer experience) not just activity.",
+                        "AI projects are embedded in our strategic priorities and linked to clear business goals.",
+                        "People feel confident using AI to innovate, experiment, and disrupt how work is done.",
+                        "Our organisation develops the skills and mindsets needed to lead in an AI-driven future.",
+                        "We openly share success stories where AI has delivered major gains or solved difficult problems."
+                    ]
+                },
+                {
+                    id: 5,
+                    name: "Future Growth & Learning",
+                    questions: [
+                        "The organisation invests in developing new skills for the future.",
+                        "We are encouraged to learn and adapt continuously.",
+                        "Career pathways are clear and future-focused.",
+                        "Employees are supported to reskill for emerging technologies.",
+                        "Leadership prioritises long-term development over short-term gains.",
+                        "We benchmark ourselves against industry best practices.",
+                        "People are rewarded for curiosity and lifelong learning.",
+                        "We regularly scan the external environment for new trends.",
+                        "Employees feel confident about the organisation's future direction.",
+                        "Our culture motivates people to grow beyond their current roles."
+                    ]
+                }
+            ];
+
+            const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
+            const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+            const [answers, setAnswers] = useState({});
+            const [showResults, setShowResults] = useState(false);
+
+            const options = [
+                { label: "Strongly Agree", value: 5, color: "#10B981" },
+                { label: "Agree", value: 4, color: "#3B82F6" },
+                { label: "Neutral", value: 3, color: "#F59E0B" },
+                { label: "Disagree", value: 2, color: "#EF4444" },
+                { label: "Strongly Disagree", value: 1, color: "#DC2626" }
+            ];
+
+            const currentCategory = categories[currentCategoryIndex];
+            const currentQuestion = currentCategory.questions[currentQuestionIndex];
+            const totalQuestions = categories.reduce((sum, cat) => sum + cat.questions.length, 0);
+            const currentGlobalQuestionNumber = categories
+                .slice(0, currentCategoryIndex)
+                .reduce((sum, cat) => sum + cat.questions.length, 0) + currentQuestionIndex + 1;
+
+            const handleAnswerSelect = (questionId, value) => {
+                setAnswers(prev => ({
+                    ...prev,
+                    [questionId]: value
+                }));
+            };
+
+            const handleNext = () => {
+                if (currentQuestionIndex < currentCategory.questions.length - 1) {
+                    setCurrentQuestionIndex(currentQuestionIndex + 1);
+                } else if (currentCategoryIndex < categories.length - 1) {
+                    setCurrentCategoryIndex(currentCategoryIndex + 1);
+                    setCurrentQuestionIndex(0);
+                } else {
+                    setShowResults(true);
+                }
+            };
+
+            const handlePrevious = () => {
+                if (currentQuestionIndex > 0) {
+                    setCurrentQuestionIndex(currentQuestionIndex - 1);
+                } else if (currentCategoryIndex > 0) {
+                    setCurrentCategoryIndex(currentCategoryIndex - 1);
+                    setCurrentQuestionIndex(categories[currentCategoryIndex - 1].questions.length - 1);
+                }
+            };
+
+            const calculateScores = () => {
+                const categoryScores = categories.map(category => {
+                    const categoryAnswers = Object.entries(answers)
+                        .filter(([key]) => {
+                            const questionIndex = parseInt(key.split('-')[1]);
+                            const categoryStart = categories.slice(0, category.id - 1)
+                                .reduce((sum, cat) => sum + cat.questions.length, 0);
+                            const categoryEnd = categoryStart + category.questions.length;
+                            return questionIndex >= categoryStart && questionIndex < categoryEnd;
+                        })
+                        .map(([_, value]) => value);
+
+                    const totalScore = categoryAnswers.reduce((sum, score) => sum + score, 0);
+                    const maxScore = category.questions.length * 5;
+                    const percentage = categoryAnswers.length > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
+
+                    return {
+                        category: category.name,
+                        total: totalScore,
+                        max: maxScore,
+                        percentage: percentage,
+                        average: categoryAnswers.length > 0 ? Math.round((totalScore / categoryAnswers.length) * 10) / 10 : 0,
+                        questionCount: categoryAnswers.length
+                    };
+                });
+
+                const overallTotal = Object.values(answers).reduce((sum, score) => sum + score, 0);
+                const overallPercentage = Math.round((overallTotal / (totalQuestions * 5)) * 100);
+
+                return {
+                    categories: categoryScores,
+                    overall: {
+                        total: overallTotal,
+                        max: totalQuestions * 5,
+                        percentage: overallPercentage,
+                        average: Math.round((overallTotal / totalQuestions) * 10) / 10
+                    }
+                };
+            };
+
+            const getScoreInterpretation = (percentage) => {
+                if (percentage >= 90) return "Exceptional";
+                if (percentage >= 80) return "Strong";
+                if (percentage >= 70) return "Good";
+                if (percentage >= 60) return "Developing";
+                return "Emerging";
+            };
+
+            const progress = (currentGlobalQuestionNumber / totalQuestions) * 100;
+
+            if (showResults) {
+                const scores = calculateScores();
+                return (
+                    React.createElement('div', { className: 'survey-container' },
+                        React.createElement('div', { className: 'logo-section' },
+                            React.createElement('img', {
+                                src: 'images/logo.svg',
+                                alt: '21st Century Leadership Logo',
+                                className: 'logo'
+                            })
+                        ),
+                        React.createElement('div', { className: 'results-container' },
+                            React.createElement('h2', null, 'Assessment Complete!'),
+                            React.createElement('div', { className: 'overall-score' },
+                                React.createElement('div', { className: 'score-circle' },
+                                    React.createElement('span', { className: 'score-percentage' }, scores.overall.percentage + '%'),
+                                    React.createElement('span', { className: 'score-label' }, 'Overall Score')
+                                ),
+                                React.createElement('div', { className: 'score-details' },
+                                    React.createElement('p', null, 'Total Score: ' + scores.overall.total + '/' + scores.overall.max),
+                                    React.createElement('p', null, 'Average Score: ' + scores.overall.average + '/5')
+                                )
+                            ),
+                            React.createElement('div', { className: 'category-scores' },
+                                React.createElement('h3', null, 'Category Breakdown:'),
+                                scores.categories.map((cat) =>
+                                    React.createElement('div', { key: cat.category, className: 'category-result' },
+                                        React.createElement('div', { className: 'category-header' },
+                                            React.createElement('h4', null, 'Category ' + (categories.findIndex(c => c.name === cat.category) + 1) + ': ' + cat.category),
+                                            React.createElement('span', { className: 'category-percentage' }, cat.percentage + '%')
+                                        ),
+                                        React.createElement('div', { className: 'category-bar' },
+                                            React.createElement('div', {
+                                                className: 'category-fill',
+                                                style: { width: cat.percentage + '%' }
+                                            })
+                                        ),
+                                        React.createElement('div', { className: 'category-stats' },
+                                            React.createElement('span', null, 'Score: ' + cat.total + '/' + cat.max),
+                                            React.createElement('span', null, 'Avg: ' + cat.average + '/5'),
+                                            React.createElement('span', null, getScoreInterpretation(cat.percentage))
+                                        )
+                                    )
+                                )
+                            ),
+                            React.createElement('div', { className: 'action-buttons' },
+                                React.createElement('button', {
+                                    className: 'btn-secondary',
+                                    onClick: () => {
+                                        setCurrentCategoryIndex(0);
+                                        setCurrentQuestionIndex(0);
+                                        setAnswers({});
+                                        setShowResults(false);
+                                    }
+                                }, 'Take Assessment Again'),
+                                React.createElement('button', {
+                                    className: 'btn-primary',
+                                    onClick: onComplete
+                                }, 'Back to Home')
+                            )
+                        )
+                    )
+                );
+            }
+
+            const questionId = `${currentCategoryIndex}-${currentQuestionIndex}`;
+
+            return (
+                React.createElement('div', { className: 'app' },
+                    React.createElement('div', { className: 'logo-section' },
+                        React.createElement('img', {
+                            src: 'images/logo.svg',
+                            alt: '21st Century Leadership Logo',
+                            className: 'logo'
+                        })
+                    ),
+                    React.createElement('div', { className: 'survey-container' },
+                        React.createElement('div', { className: 'survey-header' },
+                            React.createElement('h2', null, 'Category ' + (currentCategoryIndex + 1) + ': ' + currentCategory.name + ' Assessment'),
+                            React.createElement('div', { className: 'progress-bar-container' },
+                                React.createElement('div', { className: 'progress-bar' },
+                                    React.createElement('div', { className: 'progress-fill', style: { width: progress + '%' } })
+                                ),
+                                React.createElement('span', { className: 'progress-text' },
+                                    currentGlobalQuestionNumber + ' of ' + totalQuestions
+                                )
+                            )
+                        ),
+                        React.createElement('div', { className: 'question-container' },
+                            React.createElement('h3', null, currentQuestion),
+                            React.createElement('div', { className: 'options-container' },
+                                options.map((option) =>
+                                    React.createElement('button', {
+                                        key: option.value,
+                                        className: 'option-button ' + (answers[questionId] === option.value ? 'selected' : ''),
+                                        style: {
+                                            borderColor: answers[questionId] === option.value ? option.color : '#DEDEDE',
+                                            backgroundColor: answers[questionId] === option.value ? option.color + '20' : 'transparent'
+                                        },
+                                        onClick: () => handleAnswerSelect(questionId, option.value)
+                                    },
+                                        React.createElement('span', { className: 'option-label' }, option.label)
+                                        /* Removed option-value display for cleaner look */
+                                    )
+                                )
+                            )
+                        ),
+                        React.createElement('div', { className: 'navigation-buttons' },
+                            React.createElement('button', {
+                                className: 'btn-secondary',
+                                onClick: handlePrevious,
+                                disabled: currentCategoryIndex === 0 && currentQuestionIndex === 0
+                            }, 'Previous'),
+                            React.createElement('button', {
+                                className: 'btn-primary',
+                                onClick: handleNext,
+                                disabled: answers[questionId] === undefined
+                            }, (currentCategoryIndex === categories.length - 1 && currentQuestionIndex === currentCategory.questions.length - 1) ? 'Complete Assessment' : 'Next')
+                        )
+                    )
+                )
+            );
+        };
+
+        const App = () => {
+            const [currentView, setCurrentView] = useState('landing');
+
+            const handleStartSurvey = () => {
+                setCurrentView('survey');
+            };
+
+            const handleSurveyComplete = () => {
+                setCurrentView('results');
+            };
+
+            const handleBackToHome = () => {
+                setCurrentView('landing');
+            };
+
+            const renderCurrentView = () => {
+                switch (currentView) {
+                    case 'survey':
+                        return React.createElement('div', { className: 'app' },
+                            React.createElement(Survey, { onComplete: handleSurveyComplete })
+                        );
+
+                    case 'results':
+                        return React.createElement('div', { className: 'app' },
+                            React.createElement('main', { className: 'hero-section' },
+                                React.createElement('div', { className: 'logo-section' },
+                                    React.createElement('img', {
+                                        src: 'images/logo.svg',
+                                        alt: '21st Century Leadership Logo',
+                                        className: 'logo'
+                                    })
+                                ),
+                                React.createElement('div', { className: 'hero-content' },
+                                    React.createElement('h1', { className: 'hero-title' }, 'Assessment Complete!'),
+                                    React.createElement('p', { className: 'completion-message' },
+                                        'Thank you for completing the 21st Century Leadership Assessment. Your results have been calculated and saved.'
+                                    ),
+                                    React.createElement('div', { className: 'image-banner' },
+                                        React.createElement('img', {
+                                            src: 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80',
+                                            alt: 'Success and achievement',
+                                            className: 'banner-image'
+                                        })
+                                    ),
+                                    React.createElement('div', { className: 'action-buttons' },
+                                        React.createElement('button', {
+                                            className: 'start-survey-btn',
+                                            onClick: handleBackToHome
+                                        }, 'Take Another Survey')
+                                    )
+                                )
+                            )
+                        );
+
+                    default:
+                        return React.createElement('div', { className: 'app' },
+                            React.createElement('main', { className: 'hero-section' },
+                                React.createElement('div', { className: 'logo-section' },
+                                    React.createElement('img', {
+                                        src: 'images/logo.svg',
+                                        alt: '21st Century Leadership Logo',
+                                        className: 'logo'
+                                    })
+                                ),
+                                React.createElement('div', { className: 'hero-content' },
+                                    React.createElement('h1', { className: 'hero-title' }, '21st Century Leadership Assessment'),
+                                    React.createElement('div', { className: 'image-banner' },
+                                        React.createElement('img', {
+                                            src: 'images/banner.jpg',
+                                            alt: 'Leadership and teamwork',
+                                            className: 'banner-image'
+                                        })
+                                    ),
+                                    React.createElement('button', {
+                                        className: 'start-survey-btn',
+                                        onClick: handleStartSurvey
+                                    }, 'Start Survey')
+                                )
+                            )
+                        );
+                }
+            };
+
+            return renderCurrentView();
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+    </script>
+</body>
+</html>
