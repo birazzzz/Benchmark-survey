@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
     <title>21st Century Leadership Assessment</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -134,7 +135,7 @@
 
         /* Category Scores Section */
         .category-scores {
-            text-align: left;
+            text-align: center;
             margin-bottom: 2rem;
         }
 
@@ -143,7 +144,6 @@
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 1.5rem;
-            text-align: center;
         }
 
         .category-result {
@@ -152,6 +152,9 @@
             padding: 1.5rem;
             margin-bottom: 1rem;
             border: 1px solid var(--border-light);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .category-header {
@@ -312,8 +315,28 @@
 
         /* Navigation Buttons */
         .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding: 0 1rem;
+        }
+
+        .btn-primary {
             background-color: var(--primary-color);
+            border-color: var(--primary-color);
             color: #000000;
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms ease;
+            border: 1px solid var(--primary-color);
+            min-width: 120px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
             background-color: #6BD9EC;
             border-color: #6BD9EC;
         }
@@ -327,6 +350,13 @@
             background-color: transparent;
             border-color: var(--border-light);
             color: var(--text-secondary);
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms ease;
+            border: 1px solid var(--border-light);
+            min-width: 120px;
         }
 
         .btn-secondary:hover:not(:disabled) {
@@ -335,14 +365,90 @@
             color: var(--text-primary);
         }
 
-        .btn-secondary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(1px);
         }
 
-        /* Results Container */
-        .results-container {
+        .btn-primary:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+
+        .btn-secondary:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--border-light);
+        }
+
+        /* User Details Form */
+        .user-details-container {
             text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .user-details-container h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .user-details-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .user-details-form {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Manrope', sans-serif;
+            transition: border-color 200ms ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(129, 237, 255, 0.2);
+        }
+
+        .form-group input:invalid {
+            border-color: #EF4444;
+        }
+
+        .user-details-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .results-container h2 {
@@ -360,11 +466,12 @@
         }
 
         /* Score Summary */
-        .score-summary {
+        .overall-score {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-bottom: 3rem;
+            text-align: center;
         }
 
         .score-circle {
@@ -517,30 +624,47 @@
                 gap: 0.25rem;
             }
 
-            .progress-bar {
-                width: 100%;
+            .user-details-container {
+                max-width: 100%;
+                padding: 0 1rem;
             }
 
-            .progress-text {
-                text-align: center;
-                min-width: auto;
+            .user-details-container h2 {
+                font-size: 1.75rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .user-details-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 0 0.5rem;
             }
 
             .btn-primary, .btn-secondary {
                 width: 100%;
+                min-width: auto;
             }
 
-            .score-circle {
-                width: 120px;
-                height: 120px;
+            .category-result {
+                max-width: 100%;
+                margin-left: 0.5rem;
+                margin-right: 0.5rem;
             }
 
-            .score-percentage {
-                font-size: 2rem;
-            }
-
-            .action-buttons {
+            .category-header {
                 flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .category-stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.25rem;
             }
         }
 
@@ -568,10 +692,22 @@
                 padding: 1rem;
             }
 
-            .answer-item {
+            .category-result {
+                padding: 1rem;
+                margin-left: 0.25rem;
+                margin-right: 0.25rem;
+            }
+
+            .category-header {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
+                align-items: center;
+                gap: 0.375rem;
+            }
+
+            .category-stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.25rem;
             }
         }
     </style>
@@ -671,6 +807,14 @@
             const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
             const [answers, setAnswers] = useState({});
             const [showResults, setShowResults] = useState(false);
+            const [showUserDetails, setShowUserDetails] = useState(false);
+            const [userDetails, setUserDetails] = useState({
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                company: ''
+            });
 
             const options = [
                 { label: "Strongly Agree", value: 5, color: "#10B981" },
@@ -687,11 +831,21 @@
                 .slice(0, currentCategoryIndex)
                 .reduce((sum, cat) => sum + cat.questions.length, 0) + currentQuestionIndex + 1;
 
-            const handleAnswerSelect = (questionId, value) => {
-                setAnswers(prev => ({
+            const handleUserDetailsChange = (field, value) => {
+                setUserDetails(prev => ({
                     ...prev,
-                    [questionId]: value
+                    [field]: value
                 }));
+            };
+
+            const handleUserDetailsSubmit = () => {
+                // Validate required fields
+                if (!userDetails.firstName || !userDetails.lastName || !userDetails.email) {
+                    alert('Please fill in all required fields (First Name, Last Name, and Email)');
+                    return;
+                }
+                setShowUserDetails(false);
+                setShowResults(true);
             };
 
             const handleNext = () => {
@@ -701,7 +855,7 @@
                     setCurrentCategoryIndex(currentCategoryIndex + 1);
                     setCurrentQuestionIndex(0);
                 } else {
-                    setShowResults(true);
+                    setShowUserDetails(true);
                 }
             };
 
@@ -717,8 +871,9 @@
             const calculateScores = () => {
                 const categoryScores = categories.map(category => {
                     const categoryAnswers = Object.entries(answers)
-                        .filter(([key]) => {
-                            const questionIndex = parseInt(key.split('-')[1]);
+                        .filter(([key, value]) => {
+                            // Parse global question index from key (format: "globalIndex")
+                            const questionIndex = parseInt(key);
                             const categoryStart = categories.slice(0, category.id - 1)
                                 .reduce((sum, cat) => sum + cat.questions.length, 0);
                             const categoryEnd = categoryStart + category.questions.length;
@@ -741,6 +896,7 @@
                 });
 
                 const overallTotal = Object.values(answers).reduce((sum, score) => sum + score, 0);
+                const totalQuestions = categories.reduce((sum, cat) => sum + cat.questions.length, 0);
                 const overallPercentage = Math.round((overallTotal / (totalQuestions * 5)) * 100);
 
                 return {
@@ -763,6 +919,95 @@
             };
 
             const progress = (currentGlobalQuestionNumber / totalQuestions) * 100;
+
+            if (showUserDetails) {
+                return (
+                    React.createElement('div', { className: 'survey-container' },
+                        React.createElement('div', { className: 'logo-section' },
+                            React.createElement('img', {
+                                src: 'images/logo.svg',
+                                alt: '21st Century Leadership Logo',
+                                className: 'logo'
+                            })
+                        ),
+                        React.createElement('div', { className: 'user-details-container' },
+                            React.createElement('h2', null, 'Almost there! Tell us a bit about yourself'),
+                            React.createElement('p', { className: 'user-details-subtitle' },
+                                'Please provide your details to receive your personalized assessment results.'
+                            ),
+                            React.createElement('form', { className: 'user-details-form' },
+                                React.createElement('div', { className: 'form-row' },
+                                    React.createElement('div', { className: 'form-group' },
+                                        React.createElement('label', { htmlFor: 'firstName' }, 'First Name *'),
+                                        React.createElement('input', {
+                                            type: 'text',
+                                            id: 'firstName',
+                                            value: userDetails.firstName,
+                                            onChange: (e) => handleUserDetailsChange('firstName', e.target.value),
+                                            placeholder: 'Enter your first name',
+                                            required: true
+                                        })
+                                    ),
+                                    React.createElement('div', { className: 'form-group' },
+                                        React.createElement('label', { htmlFor: 'lastName' }, 'Last Name *'),
+                                        React.createElement('input', {
+                                            type: 'text',
+                                            id: 'lastName',
+                                            value: userDetails.lastName,
+                                            onChange: (e) => handleUserDetailsChange('lastName', e.target.value),
+                                            placeholder: 'Enter your last name',
+                                            required: true
+                                        })
+                                    )
+                                ),
+                                React.createElement('div', { className: 'form-group' },
+                                    React.createElement('label', { htmlFor: 'email' }, 'Email Address *'),
+                                    React.createElement('input', {
+                                        type: 'email',
+                                        id: 'email',
+                                        value: userDetails.email,
+                                        onChange: (e) => handleUserDetailsChange('email', e.target.value),
+                                        placeholder: 'Enter your email address',
+                                        required: true
+                                    })
+                                ),
+                                React.createElement('div', { className: 'form-group' },
+                                    React.createElement('label', { htmlFor: 'phone' }, 'Phone Number'),
+                                    React.createElement('input', {
+                                        type: 'tel',
+                                        id: 'phone',
+                                        value: userDetails.phone,
+                                        onChange: (e) => handleUserDetailsChange('phone', e.target.value),
+                                        placeholder: 'Enter your phone number'
+                                    })
+                                ),
+                                React.createElement('div', { className: 'form-group' },
+                                    React.createElement('label', { htmlFor: 'company' }, 'Company'),
+                                    React.createElement('input', {
+                                        type: 'text',
+                                        id: 'company',
+                                        value: userDetails.company,
+                                        onChange: (e) => handleUserDetailsChange('company', e.target.value),
+                                        placeholder: 'Enter your company name'
+                                    })
+                                )
+                            ),
+                            React.createElement('div', { className: 'user-details-actions' },
+                                React.createElement('button', {
+                                    type: 'button',
+                                    className: 'btn-secondary',
+                                    onClick: () => setShowUserDetails(false)
+                                }, 'Back to Survey'),
+                                React.createElement('button', {
+                                    type: 'button',
+                                    className: 'btn-primary',
+                                    onClick: handleUserDetailsSubmit
+                                }, 'View Results')
+                            )
+                        )
+                    )
+                );
+            }
 
             if (showResults) {
                 const scores = calculateScores();
@@ -789,16 +1034,16 @@
                             ),
                             React.createElement('div', { className: 'category-scores' },
                                 React.createElement('h3', null, 'Category Breakdown:'),
-                                scores.categories.map((cat) =>
-                                    React.createElement('div', { key: cat.category, className: 'category-result' },
+                                scores.categories.map((cat, index) =>
+                                    React.createElement('div', { key: cat.category + index, className: 'category-result' },
                                         React.createElement('div', { className: 'category-header' },
-                                            React.createElement('h4', null, 'Category ' + (categories.findIndex(c => c.name === cat.category) + 1) + ': ' + cat.category),
+                                            React.createElement('h4', null, 'Category ' + (index + 1) + ': ' + cat.category),
                                             React.createElement('span', { className: 'category-percentage' }, cat.percentage + '%')
                                         ),
                                         React.createElement('div', { className: 'category-bar' },
                                             React.createElement('div', {
                                                 className: 'category-fill',
-                                                style: { width: cat.percentage + '%' }
+                                                style: { width: Math.max(cat.percentage, 2) + '%' }
                                             })
                                         ),
                                         React.createElement('div', { className: 'category-stats' },
@@ -829,7 +1074,7 @@
                 );
             }
 
-            const questionId = `${currentCategoryIndex}-${currentQuestionIndex}`;
+            const questionId = currentGlobalQuestionNumber;
 
             return (
                 React.createElement('div', { className: 'app' },
