@@ -379,76 +379,9 @@
             box-shadow: 0 0 0 2px var(--border-light);
         }
 
-        /* User Details Form */
-        .user-details-container {
+        /* Results Container */
+        .results-container {
             text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .user-details-container h2 {
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-        }
-
-        .user-details-subtitle {
-            font-size: 1.125rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .user-details-form {
-            text-align: left;
-            margin-bottom: 2rem;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .form-group {
-            flex: 1;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid var(--border-light);
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: 'Manrope', sans-serif;
-            transition: border-color 200ms ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(129, 237, 255, 0.2);
-        }
-
-        .form-group input:invalid {
-            border-color: #EF4444;
-        }
-
-        .user-details-actions {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
         }
 
         .results-container h2 {
@@ -624,21 +557,16 @@
                 gap: 0.25rem;
             }
 
-            .user-details-container {
-                max-width: 100%;
-                padding: 0 1rem;
+            .progress-bar {
+                width: 100%;
             }
 
-            .user-details-container h2 {
-                font-size: 1.75rem;
+            .progress-text {
+                text-align: center;
+                min-width: auto;
             }
 
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-
-            .user-details-actions {
+            .navigation-buttons {
                 flex-direction: column;
                 gap: 0.75rem;
                 padding: 0 0.5rem;
@@ -807,14 +735,6 @@
             const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
             const [answers, setAnswers] = useState({});
             const [showResults, setShowResults] = useState(false);
-            const [showUserDetails, setShowUserDetails] = useState(false);
-            const [userDetails, setUserDetails] = useState({
-                firstName: '',
-                lastName: '',
-                email: '',
-                phone: '',
-                company: ''
-            });
 
             const options = [
                 { label: "Strongly Agree", value: 5, color: "#10B981" },
@@ -831,21 +751,11 @@
                 .slice(0, currentCategoryIndex)
                 .reduce((sum, cat) => sum + cat.questions.length, 0) + currentQuestionIndex + 1;
 
-            const handleUserDetailsChange = (field, value) => {
-                setUserDetails(prev => ({
+            const handleAnswerSelect = (questionId, value) => {
+                setAnswers(prev => ({
                     ...prev,
-                    [field]: value
+                    [questionId]: value
                 }));
-            };
-
-            const handleUserDetailsSubmit = () => {
-                // Validate required fields
-                if (!userDetails.firstName || !userDetails.lastName || !userDetails.email) {
-                    alert('Please fill in all required fields (First Name, Last Name, and Email)');
-                    return;
-                }
-                setShowUserDetails(false);
-                setShowResults(true);
             };
 
             const handleNext = () => {
@@ -855,7 +765,7 @@
                     setCurrentCategoryIndex(currentCategoryIndex + 1);
                     setCurrentQuestionIndex(0);
                 } else {
-                    setShowUserDetails(true);
+                    setShowResults(true);
                 }
             };
 
@@ -919,95 +829,6 @@
             };
 
             const progress = (currentGlobalQuestionNumber / totalQuestions) * 100;
-
-            if (showUserDetails) {
-                return (
-                    React.createElement('div', { className: 'survey-container' },
-                        React.createElement('div', { className: 'logo-section' },
-                            React.createElement('img', {
-                                src: 'images/logo.svg',
-                                alt: '21st Century Leadership Logo',
-                                className: 'logo'
-                            })
-                        ),
-                        React.createElement('div', { className: 'user-details-container' },
-                            React.createElement('h2', null, 'Almost there! Tell us a bit about yourself'),
-                            React.createElement('p', { className: 'user-details-subtitle' },
-                                'Please provide your details to receive your personalized assessment results.'
-                            ),
-                            React.createElement('form', { className: 'user-details-form' },
-                                React.createElement('div', { className: 'form-row' },
-                                    React.createElement('div', { className: 'form-group' },
-                                        React.createElement('label', { htmlFor: 'firstName' }, 'First Name *'),
-                                        React.createElement('input', {
-                                            type: 'text',
-                                            id: 'firstName',
-                                            value: userDetails.firstName,
-                                            onChange: (e) => handleUserDetailsChange('firstName', e.target.value),
-                                            placeholder: 'Enter your first name',
-                                            required: true
-                                        })
-                                    ),
-                                    React.createElement('div', { className: 'form-group' },
-                                        React.createElement('label', { htmlFor: 'lastName' }, 'Last Name *'),
-                                        React.createElement('input', {
-                                            type: 'text',
-                                            id: 'lastName',
-                                            value: userDetails.lastName,
-                                            onChange: (e) => handleUserDetailsChange('lastName', e.target.value),
-                                            placeholder: 'Enter your last name',
-                                            required: true
-                                        })
-                                    )
-                                ),
-                                React.createElement('div', { className: 'form-group' },
-                                    React.createElement('label', { htmlFor: 'email' }, 'Email Address *'),
-                                    React.createElement('input', {
-                                        type: 'email',
-                                        id: 'email',
-                                        value: userDetails.email,
-                                        onChange: (e) => handleUserDetailsChange('email', e.target.value),
-                                        placeholder: 'Enter your email address',
-                                        required: true
-                                    })
-                                ),
-                                React.createElement('div', { className: 'form-group' },
-                                    React.createElement('label', { htmlFor: 'phone' }, 'Phone Number'),
-                                    React.createElement('input', {
-                                        type: 'tel',
-                                        id: 'phone',
-                                        value: userDetails.phone,
-                                        onChange: (e) => handleUserDetailsChange('phone', e.target.value),
-                                        placeholder: 'Enter your phone number'
-                                    })
-                                ),
-                                React.createElement('div', { className: 'form-group' },
-                                    React.createElement('label', { htmlFor: 'company' }, 'Company'),
-                                    React.createElement('input', {
-                                        type: 'text',
-                                        id: 'company',
-                                        value: userDetails.company,
-                                        onChange: (e) => handleUserDetailsChange('company', e.target.value),
-                                        placeholder: 'Enter your company name'
-                                    })
-                                )
-                            ),
-                            React.createElement('div', { className: 'user-details-actions' },
-                                React.createElement('button', {
-                                    type: 'button',
-                                    className: 'btn-secondary',
-                                    onClick: () => setShowUserDetails(false)
-                                }, 'Back to Survey'),
-                                React.createElement('button', {
-                                    type: 'button',
-                                    className: 'btn-primary',
-                                    onClick: handleUserDetailsSubmit
-                                }, 'View Results')
-                            )
-                        )
-                    )
-                );
-            }
 
             if (showResults) {
                 const scores = calculateScores();
