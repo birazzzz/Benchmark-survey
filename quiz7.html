@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leadapreneur - Quiz</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Colors */
+            --primary: #81EDFF;
+            --background: #EDEAE7;
+            --surface: #FFFFFF;
+            --text-primary: #222222;
+            --text-secondary: #666666;
+            --border: #E0E0E0;
+            --border-hover: #81EDFF;
+            --error: #FF6B6B;
+            
+            /* Typography */
+            --font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            
+            /* Spacing */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-2xl: 24px;
+            --radius-full: 9999px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding: 2.5rem 0 0;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+        }
+        
+        /* Logo */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo-image {
+            width: 110%;
+            height: auto;
+            max-width: 200px;
+        }
+        
+        .logo {
+            display: inline-block;
+        }
+        
+        .logo-image {
+            height: 50px; /* Increased by 25% from 40px */
+            width: auto;
+        }
+        
+        /* Quiz Container */
+        .quiz-container {
+            background-color: var(--surface);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .question {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-8);
+            color: var(--text-primary);
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-6);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+        
+        .form-col {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: var(--space-2);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-family: var(--font-family);
+            font-size: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(129, 237, 255, 0.2);
+        }
+        
+        .error-message {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: var(--space-1);
+            display: none;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 2rem;
+            font-family: var(--font-family);
+            font-weight: 700;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #000000;
+            background-color: var(--primary);
+            border: none;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .btn:hover {
+            background-color: #6bd4e6;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+            border-color: var(--border-hover);
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            gap: var(--space-4);
+        }
+        
+        .btn-flex-end {
+            margin-left: auto;
+        }
+        
+        /* Progress */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border);
+            border-radius: var(--radius-full);
+            margin-bottom: var(--space-6);
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 100%;
+            background-color: var(--primary);
+            border-radius: var(--radius-full);
+            transition: width 0.3s ease;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: var(--space-6) var(--space-4);
+            }
+            
+            .question {
+                font-size: 1.25rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: var(--space-4);
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo -->
+    <div class="logo-container">
+        <a href="index.html" class="logo">
+            <img src="images/logo.svg" alt="QuizMaster Logo" class="logo-image">
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="quiz-container">
+            <h1 class="question" id="question">Almost there! Tell us a bit about yourself</h1>
+            
+            <form id="contactForm" name="quiz-submissions" method="POST" netlify>
+                <input type="hidden" name="form-name" value="quiz-submissions">
+                <input type="hidden" name="role" id="hiddenRole">
+                <input type="hidden" name="q1" id="hiddenQ1">
+                <input type="hidden" name="q2" id="hiddenQ2">
+                <input type="hidden" name="q3" id="hiddenQ3">
+                <input type="hidden" name="q4" id="hiddenQ4">
+                <input type="hidden" name="q5" id="hiddenQ5">
+                <input type="hidden" name="q6" id="hiddenQ6">
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                        <div class="error-message" id="firstNameError">Please enter your first name</div>
+                    </div>
+                    <div class="form-col">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                        <div class="error-message" id="lastNameError">Please enter your last name</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="error-message" id="emailError">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                    <div class="error-message" id="phoneError">Please enter a valid phone number</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company" required>
+                    <div class="error-message" id="companyError">Please enter your company name</div>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" id="skipBtn" class="btn btn-outline">Skip</button>
+                    <button type="submit" id="submitBtn" class="btn">Show Results</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Page Indicator -->
+    <div class="page-indicator" style="text-align: center; margin: 1.5rem auto; color: #666666; font-size: 0.9rem; max-width: 600px; padding: 0 20px;">6 of 6</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBar = document.getElementById('progressBar');
+            const form = document.getElementById('contactForm');
+            const skipBtn = document.getElementById('skipBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Form fields
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const email = document.getElementById('email');
+            const phone = document.getElementById('phone');
+            const company = document.getElementById('company');
+            
+            // Error messages
+            const firstNameError = document.getElementById('firstNameError');
+            const lastNameError = document.getElementById('lastNameError');
+            const emailError = document.getElementById('emailError');
+            const phoneError = document.getElementById('phoneError');
+            const companyError = document.getElementById('companyError');
+            
+            // Update progress bar (6/6 steps - final step)
+            progressBar.style.width = '100%';
+            
+            // Email validation
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(String(email).toLowerCase());
+            }
+            
+            // Phone validation (simple check for at least 10 digits)
+            function isValidPhone(phone) {
+                const digits = phone.replace(/\D/g, '');
+                return digits.length >= 10;
+            }
+            
+            // Show error
+            function showError(element, errorElement, message) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                element.style.borderColor = 'var(--error)';
+            }
+            
+            // Hide error
+            function hideError(element, errorElement) {
+                errorElement.style.display = 'none';
+                element.style.borderColor = 'var(--border)';
+            }
+            
+            // Validate form
+            function validateForm() {
+                let isValid = true;
+                
+                // Validate first name
+                if (!firstName.value.trim()) {
+                    showError(firstName, firstNameError, 'Please enter your first name');
+                    isValid = false;
+                } else {
+                    hideError(firstName, firstNameError);
+                }
+                
+                // Validate last name
+                if (!lastName.value.trim()) {
+                    showError(lastName, lastNameError, 'Please enter your last name');
+                    isValid = false;
+                } else {
+                    hideError(lastName, lastNameError);
+                }
+                
+                // Validate email
+                if (!email.value.trim()) {
+                    showError(email, emailError, 'Please enter your email address');
+                    isValid = false;
+                } else if (!isValidEmail(email.value.trim())) {
+                    showError(email, emailError, 'Please enter a valid email address');
+                    isValid = false;
+                } else {
+                    hideError(email, emailError);
+                }
+                
+                // Validate phone
+                if (!phone.value.trim()) {
+                    showError(phone, phoneError, 'Please enter your phone number');
+                    isValid = false;
+                } else if (!isValidPhone(phone.value)) {
+                    showError(phone, phoneError, 'Please enter a valid phone number');
+                    isValid = false;
+                } else {
+                    hideError(phone, phoneError);
+                }
+                
+                // Validate company
+                if (!company.value.trim()) {
+                    showError(company, companyError, 'Please enter your company name');
+                    isValid = false;
+                } else {
+                    hideError(company, companyError);
+                }
+                
+                return isValid;
+            }
+            
+            // Function to determine user role based on quiz answers
+            function determineUserRole() {
+                console.log('Determining user role...');
+                
+                // Get answers from localStorage
+                const q1Answer = localStorage.getItem('q1Answer') || '';
+                const q2Answer = localStorage.getItem('q2Answer') || '';
+                const q3Answer = localStorage.getItem('q3Answer') || '';
+                
+                console.log('Q1 Answer:', q1Answer);
+                console.log('Q2 Answer:', q2Answer);
+                console.log('Q3 Answer:', q3Answer);
+                
+                // Helper function to get option based on answer text
+                const getOption = (answer, questionNumber) => {
+                    if (!answer) return null;
+                    const normalized = answer.trim().toLowerCase();
+                    
+                    // Q1: What best describes your primary role?
+                    if (questionNumber === 1) {
+                        if (normalized.includes('carrying out specific tasks') || 
+                            normalized.includes('following instructions')) {
+                            return 'a'; // Individual Contributor
+                        } else if (normalized.includes('coordinating tasks') || 
+                                  normalized.includes('managing teams')) {
+                            return 'b'; // Coach
+                        } else if (normalized.includes('developing strategies') || 
+                                  normalized.includes('high-level decisions')) {
+                            return 'c'; // Leader
+                        }
+                    }
+                    
+                    // Q2: How do you prefer to work?
+                    if (questionNumber === 2) {
+                        if (normalized.includes('exploring new ideas') || 
+                            normalized.includes('independently')) {
+                            return 'a'; // Individual Contributor
+                        } else if (normalized.includes('working in a small team') || 
+                                  normalized.includes('specific goals')) {
+                            return 'b'; // Coach
+                        } else if (normalized.includes('modular ecosystem') || 
+                                  normalized.includes('collaborating with others')) {
+                            return 'c'; // Leader
+                        }
+                    }
+                    
+                    // Q3: What type of result do you aspire to achieve?
+                    if (questionNumber === 3) {
+                        if (normalized.includes('define an exciting opportunity') || 
+                            normalized.includes('present it to stakeholders')) {
+                            return 'a'; // Individual Contributor
+                        } else if (normalized.includes('achieve spectacular results') || 
+                                  normalized.includes('competitive advantage')) {
+                            return 'b'; // Coach
+                        } else if (normalized.includes('develop and deploy') || 
+                                  normalized.includes('agile innovation')) {
+                            return 'c'; // Leader
+                        }
+                    }
+                    
+                    console.log('Could not determine option for Q' + questionNumber + ' answer:', answer);
+                    return null;
+                };
+                
+                // Get options for each question
+                const q1Option = getOption(q1Answer, 1);
+                const q2Option = getOption(q2Answer, 2);
+                const q3Option = getOption(q3Answer, 3);
+                
+                console.log('Q1 Option:', q1Option);
+                console.log('Q2 Option:', q2Option);
+                console.log('Q3 Option:', q3Option);
+                
+                // Count the options
+                const optionCounts = { a: 0, b: 0, c: 0 };
+                [q1Option, q2Option, q3Option].forEach(opt => {
+                    if (opt) optionCounts[opt]++;
+                });
+                
+                console.log('Option counts:', optionCounts);
+                
+                // If Q1 and Q3 have the same option, use that as the role
+                if (q1Option && q3Option && q1Option === q3Option) {
+                    console.log('Q1 and Q3 match, using that role');
+                    return q1Option === 'a' ? 'Innovator' : 
+                           q1Option === 'b' ? 'Coach' : 'Leader';
+                }
+                
+                // Otherwise, use Q2 to determine the role
+                console.log('Using Q2 to determine role');
+                return q2Option === 'a' ? 'Innovator' : 
+                       q2Option === 'b' ? 'Coach' : 'Leader';
+            }
+            
+            // Function to save submission to JSON file
+            async function saveSubmissionToJson() {
+                const submission = {
+                    id: 'quiz_' + Date.now(),
+                    role: determineUserRole(),
+                    q1: localStorage.getItem('q1Answer') || '',
+                    q2: localStorage.getItem('q2Answer') || '',
+                    q3: localStorage.getItem('q3Answer') || '',
+                    q4: localStorage.getItem('q4Answer') || '',
+                    q5: localStorage.getItem('q5Answer') || '',
+                    q6: localStorage.getItem('q6Answer') || '',
+                    firstName: document.getElementById('firstName').value.trim(),
+                    lastName: document.getElementById('lastName').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    company: document.getElementById('company').value.trim(),
+                    timestamp: new Date().toISOString(),
+                    version: '1.0',
+                    submissionSource: 'web-form'
+                };
+
+                try {
+                    // Get existing submissions
+                    const response = await fetch('data/quiz-submissions.json');
+                    let submissions = [];
+                    if (response.ok) {
+                        submissions = await response.json();
+                    }
+                    
+                    // Add new submission
+                    submissions.push(submission);
+                    
+                    // Save back to the file (this would work if the server supports writing files)
+                    // In a real app, you would need a backend API to handle this
+                    console.log('New submission:', submission);
+                    console.log('Total submissions:', submissions.length);
+                    
+                    // For demo purposes, we'll just store in localStorage
+                    localStorage.setItem('latestSubmission', JSON.stringify(submission));
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Error saving submission:', error);
+                    return false;
+                }
+            }
+            
+            // Form submission
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    // Determine and save the user's role
+                    const userRole = determineUserRole();
+                    localStorage.setItem('quizRole', userRole);
+                    
+                    // Save contact information to localStorage (for local dashboard)
+                    const firstName = document.getElementById('firstName').value.trim();
+                    const lastName = document.getElementById('lastName').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const phone = document.getElementById('phone').value.trim();
+                    const company = document.getElementById('company').value.trim();
+                    
+                    localStorage.setItem('firstName', firstName);
+                    localStorage.setItem('lastName', lastName);
+                    localStorage.setItem('email', email);
+                    localStorage.setItem('phone', phone);
+                    localStorage.setItem('company', company);
+                    
+                    // Save submission to JSON
+                    const saved = await saveSubmissionToJson();
+                    
+                    // Populate hidden fields with quiz data for Netlify Forms
+                    document.getElementById('hiddenRole').value = userRole;
+                    document.getElementById('hiddenQ1').value = localStorage.getItem('q1Answer') || '';
+                    document.getElementById('hiddenQ2').value = localStorage.getItem('q2Answer') || '';
+                    document.getElementById('hiddenQ3').value = localStorage.getItem('q3Answer') || '';
+                    document.getElementById('hiddenQ4').value = localStorage.getItem('q4Answer') || '';
+                    document.getElementById('hiddenQ5').value = localStorage.getItem('q5Answer') || '';
+                    document.getElementById('hiddenQ6').value = localStorage.getItem('q6Answer') || '';
+                    
+                    // Submit to Netlify Forms
+                    const formData = new FormData(form);
+                    
+                    fetch('/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams(formData).toString()
+                    })
+                    .then(() => {
+                        window.location.href = 'results.html';
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        // Fallback to results page even if submission fails
+                        window.location.href = 'results.html';
+                    });
+                }
+            });
+            
+            // Skip button
+            skipBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to skip? Your information will not be saved.')) {
+                    // Clear any existing contact info if skipping
+                    localStorage.removeItem('firstName');
+                    localStorage.removeItem('lastName');
+                    localStorage.removeItem('email');
+                    localStorage.removeItem('phone');
+                    localStorage.removeItem('company');
+                    window.location.href = 'results.html';
+                }
+            });
+            
+            // Real-time validation
+            firstName.addEventListener('input', () => {
+                if (firstName.value.trim()) {
+                    hideError(firstName, firstNameError);
+                }
+            });
+            
+            lastName.addEventListener('input', () => {
+                if (lastName.value.trim()) {
+                    hideError(lastName, lastNameError);
+                }
+            });
+            
+            email.addEventListener('input', () => {
+                if (email.value.trim() && isValidEmail(email.value.trim())) {
+                    hideError(email, emailError);
+                }
+            });
+            
+            phone.addEventListener('input', () => {
+                if (phone.value.trim() && isValidPhone(phone.value)) {
+                    hideError(phone, phoneError);
+                }
+            });
+            
+            company.addEventListener('input', () => {
+                if (company.value.trim()) {
+                    hideError(company, companyError);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

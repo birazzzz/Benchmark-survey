@@ -281,7 +281,7 @@
 
         .option-button {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             padding: 0.875rem 1rem;
             border: 2px solid var(--border-light);
@@ -289,7 +289,7 @@
             background-color: transparent;
             cursor: pointer;
             transition: all 200ms ease;
-            text-align: center;
+            text-align: left;
             min-height: 48px;
         }
 
@@ -341,9 +341,46 @@
             border-color: #6BD9EC;
         }
 
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .form-col label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-col input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: var(--font-family);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-col input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-col input.error {
+            border-color: #ef4444;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
         }
 
         .btn-secondary {
@@ -646,91 +683,7 @@
     <script type="text/babel">
         const { useState } = React;
 
-        const Survey = ({ onComplete }) => {
-            // All categories with their questions
-            const categories = [
-                {
-                    id: 1,
-                    name: "Leadership",
-                    questions: [
-                        "Leaders clearly communicate our organisation's vision and direction.",
-                        "Managers encourage experimentation and accept mistakes as part of learning.",
-                        "Leaders actively develop people's skills and careers.",
-                        "My manager provides regular, constructive feedback.",
-                        "Decision-making authority is delegated to the appropriate level.",
-                        "Leadership behaviour matches the organisation's stated values.",
-                        "Leaders create an environment where diverse perspectives are valued.",
-                        "Leaders demonstrate transparency and honesty in their communication.",
-                        "I see leaders modelling ethical and responsible behaviour.",
-                        "Senior leaders inspire me to do my best work."
-                    ]
-                },
-                {
-                    id: 2,
-                    name: "Innovation",
-                    questions: [
-                        "Employees are encouraged to suggest new ideas and improvements.",
-                        "The organisation provides time or resources to test new ideas.",
-                        "Successful ideas are scaled beyond their initial pilot stage.",
-                        "Innovation initiatives are aligned with our strategic priorities.",
-                        "We celebrate successes and learn openly from failures.",
-                        "Cross-functional teams collaborate effectively on innovation projects.",
-                        "We move quickly from idea to testing to implementation.",
-                        "Innovation is seen as everyone's responsibility, not just R&D.",
-                        "Leaders actively remove barriers to innovation.",
-                        "Our organisation has a clear process for measuring innovation impact."
-                    ]
-                },
-                {
-                    id: 3,
-                    name: "Culture",
-                    questions: [
-                        "People at all levels feel safe to voice opinions without fear of reprisal.",
-                        "Collaboration across departments is encouraged and supported.",
-                        "Our workplace environment supports diversity and inclusion.",
-                        "Recognition is given fairly and frequently for good work.",
-                        "There is a strong sense of shared purpose across the organisation.",
-                        "We respond well to change and adapt quickly.",
-                        "There is open, transparent communication between levels and teams.",
-                        "People feel engaged and motivated to contribute their best.",
-                        "Our culture promotes both high performance and well-being.",
-                        "We hold ourselves accountable for our results."
-                    ]
-                },
-                {
-                    id: 4,
-                    name: "AI Readiness",
-                    questions: [
-                        "People here see AI as a tool to achieve breakthroughs, not just to save time and write emails.",
-                        "Our teams use AI to tackle serious business challenges and seize major opportunities.",
-                        "We actively invest in AI projects that aim for 10× improvements in performance or outcomes.",
-                        "Employees are encouraged and supported to design AI-powered solutions, not only use prebuilt tools.",
-                        "Leadership challenges us to think boldly about how AI can transform our products, services, and processes.",
-                        "We measure AI initiatives by the real impact they deliver (e.g. improvements in revenue, productivity, customer experience) not just activity.",
-                        "AI projects are embedded in our strategic priorities and linked to clear business goals.",
-                        "People feel confident using AI to innovate, experiment, and disrupt how work is done.",
-                        "Our organisation develops the skills and mindsets needed to lead in an AI-driven future.",
-                        "We openly share success stories where AI has delivered major gains or solved difficult problems."
-                    ]
-                },
-                {
-                    id: 5,
-                    name: "Future Growth & Learning",
-                    questions: [
-                        "The organisation invests in developing new skills for the future.",
-                        "We are encouraged to learn and adapt continuously.",
-                        "Career pathways are clear and future-focused.",
-                        "Employees are supported to reskill for emerging technologies.",
-                        "Leadership prioritises long-term development over short-term gains.",
-                        "We benchmark ourselves against industry best practices.",
-                        "People are rewarded for curiosity and lifelong learning.",
-                        "We regularly scan the external environment for new trends.",
-                        "Employees feel confident about the organisation's future direction.",
-                        "Our culture motivates people to grow beyond their current roles."
-                    ]
-                }
-            ];
-
+        const Survey = ({ onComplete, categories }) => {
             const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
             const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
             const [answers, setAnswers] = useState({});
@@ -752,10 +705,13 @@
                 .reduce((sum, cat) => sum + cat.questions.length, 0) + currentQuestionIndex + 1;
 
             const handleAnswerSelect = (questionId, value) => {
-                setAnswers(prev => ({
-                    ...prev,
+                const newAnswers = {
+                    ...answers,
                     [questionId]: value
-                }));
+                };
+                setAnswers(newAnswers);
+                // Save answers to localStorage
+                localStorage.setItem('surveyAnswers', JSON.stringify(newAnswers));
             };
 
             const handleNext = () => {
@@ -765,7 +721,8 @@
                     setCurrentCategoryIndex(currentCategoryIndex + 1);
                     setCurrentQuestionIndex(0);
                 } else {
-                    setShowResults(true);
+                    // After the last question (50th), show additional questions page
+                    onComplete();
                 }
             };
 
@@ -947,7 +904,293 @@
                                 className: 'btn-primary',
                                 onClick: handleNext,
                                 disabled: answers[questionId] === undefined
-                            }, (currentCategoryIndex === categories.length - 1 && currentQuestionIndex === currentCategory.questions.length - 1) ? 'Complete Assessment' : 'Next')
+                            }, (currentCategoryIndex === categories.length - 1 && currentQuestionIndex === currentCategory.questions.length - 1) ? 'Continue' : 'Next')
+                        )
+                    )
+                )
+            );
+        };
+
+        const AdditionalQuestions = ({ onComplete }) => {
+            const [additionalAnswers, setAdditionalAnswers] = useState({});
+
+            const handleSubmit = () => {
+                // Save additional answers to localStorage for potential use in results
+                localStorage.setItem('additionalAnswers', JSON.stringify(additionalAnswers));
+                onComplete();
+            };
+
+            return (
+                React.createElement('div', { className: 'app' },
+                    React.createElement('div', { className: 'logo-section' },
+                        React.createElement('img', {
+                            src: 'images/logo.svg',
+                            alt: '21st Century Leadership Logo',
+                            className: 'logo'
+                        })
+                    ),
+                    React.createElement('div', { className: 'survey-container' },
+                        React.createElement('div', { className: 'survey-header' },
+                            React.createElement('h2', null, 'Additional Questions'),
+                            React.createElement('div', { className: 'progress-bar-container' },
+                                React.createElement('div', { className: 'progress-bar' },
+                                    React.createElement('div', { className: 'progress-fill', style: { width: '100%' } })
+                                ),
+                                React.createElement('span', { className: 'progress-text' },
+                                    'Additional Questions'
+                                )
+                            )
+                        ),
+                        React.createElement('div', { className: 'question-container' },
+                            React.createElement('h3', null, 'Please provide additional information to help us understand your context better.'),
+                            React.createElement('div', { className: 'options-container' },
+                                React.createElement('div', { className: 'form-group', style: { marginBottom: '1.5rem' } },
+                                    React.createElement('label', { style: { display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-primary)' } },
+                                        '1. What\'s the most important thing leadership could change to improve our culture?'
+                                    ),
+                                    React.createElement('input', {
+                                        type: 'text',
+                                        value: additionalAnswers.q1 || '',
+                                        onChange: (e) => setAdditionalAnswers(prev => ({ ...prev, q1: e.target.value })),
+                                        style: {
+                                            width: '100%',
+                                            padding: '0.75rem 1rem',
+                                            border: '2px solid var(--border-light)',
+                                            borderRadius: '8px',
+                                            fontSize: '1rem',
+                                            fontFamily: 'var(--font-family)'
+                                        },
+                                        placeholder: 'Enter your thoughts on improving culture'
+                                    })
+                                ),
+                                React.createElement('div', { className: 'form-group', style: { marginBottom: '1.5rem' } },
+                                    React.createElement('label', { style: { display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-primary)' } },
+                                        '2. Where do you see the biggest opportunity for innovation?'
+                                    ),
+                                    React.createElement('input', {
+                                        type: 'text',
+                                        value: additionalAnswers.q2 || '',
+                                        onChange: (e) => setAdditionalAnswers(prev => ({ ...prev, q2: e.target.value })),
+                                        style: {
+                                            width: '100%',
+                                            padding: '0.75rem 1rem',
+                                            border: '2px solid var(--border-light)',
+                                            borderRadius: '8px',
+                                            fontSize: '1rem',
+                                            fontFamily: 'var(--font-family)'
+                                        },
+                                        placeholder: 'Enter your thoughts on innovation opportunities'
+                                    })
+                                ),
+                                React.createElement('div', { className: 'form-group', style: { marginBottom: '1.5rem' } },
+                                    React.createElement('label', { style: { display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-primary)' } },
+                                        '3. How can we better prepare for AI?'
+                                    ),
+                                    React.createElement('input', {
+                                        type: 'text',
+                                        value: additionalAnswers.q3 || '',
+                                        onChange: (e) => setAdditionalAnswers(prev => ({ ...prev, q3: e.target.value })),
+                                        style: {
+                                            width: '100%',
+                                            padding: '0.75rem 1rem',
+                                            border: '2px solid var(--border-light)',
+                                            borderRadius: '8px',
+                                            fontSize: '1rem',
+                                            fontFamily: 'var(--font-family)'
+                                        },
+                                        placeholder: 'Enter your thoughts on AI preparation'
+                                    })
+                                ),
+                                React.createElement('div', { className: 'form-group', style: { marginBottom: '1.5rem' } },
+                                    React.createElement('label', { style: { display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-primary)' } },
+                                        '4. What future skills or capabilities should we focus on developing?'
+                                    ),
+                                    React.createElement('input', {
+                                        type: 'text',
+                                        value: additionalAnswers.q4 || '',
+                                        onChange: (e) => setAdditionalAnswers(prev => ({ ...prev, q4: e.target.value })),
+                                        style: {
+                                            width: '100%',
+                                            padding: '0.75rem 1rem',
+                                            border: '2px solid var(--border-light)',
+                                            borderRadius: '8px',
+                                            fontSize: '1rem',
+                                            fontFamily: 'var(--font-family)'
+                                        },
+                                        placeholder: 'Enter your thoughts on future skills'
+                                    })
+                                )
+                            )
+                        ),
+                        React.createElement('div', { className: 'navigation-buttons' },
+                            React.createElement('button', {
+                                className: 'btn-primary',
+                                onClick: handleSubmit
+                            }, 'Continue')
+                        )
+                    )
+                )
+            );
+        };
+
+        const UserDetails = ({ onComplete }) => {
+            const [formData, setFormData] = useState({
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                company: '',
+                jobTitle: ''
+            });
+            const [errors, setErrors] = useState({});
+
+            const handleInputChange = (field, value) => {
+                setFormData(prev => ({
+                    ...prev,
+                    [field]: value
+                }));
+                // Clear error when user starts typing
+                if (errors[field]) {
+                    setErrors(prev => ({
+                        ...prev,
+                        [field]: ''
+                    }));
+                }
+            };
+
+            const validateForm = () => {
+                const newErrors = {};
+
+                if (!formData.firstName.trim()) {
+                    newErrors.firstName = 'Please enter your first name';
+                }
+
+                if (!formData.lastName.trim()) {
+                    newErrors.lastName = 'Please enter your last name';
+                }
+
+                if (!formData.email.trim()) {
+                    newErrors.email = 'Please enter your email address';
+                } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+                    newErrors.email = 'Please enter a valid email address';
+                }
+
+                setErrors(newErrors);
+                return Object.keys(newErrors).length === 0;
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+
+                if (validateForm()) {
+                    // Save user details to localStorage
+                    localStorage.setItem('userDetails', JSON.stringify(formData));
+                    onComplete();
+                }
+            };
+
+            return (
+                React.createElement('div', { className: 'app' },
+                    React.createElement('div', { className: 'logo-section' },
+                        React.createElement('img', {
+                            src: 'images/logo.svg',
+                            alt: '21st Century Leadership Logo',
+                            className: 'logo'
+                        })
+                    ),
+                    React.createElement('div', { className: 'survey-container' },
+                        React.createElement('div', { className: 'survey-header' },
+                            React.createElement('h2', null, 'Almost there! Tell us a bit about yourself'),
+                            React.createElement('div', { className: 'progress-bar-container' },
+                                React.createElement('div', { className: 'progress-bar' },
+                                    React.createElement('div', { className: 'progress-fill', style: { width: '100%' } })
+                                ),
+                                React.createElement('span', { className: 'progress-text' },
+                                    'Final Step'
+                                )
+                            )
+                        ),
+                        React.createElement('div', { className: 'question-container' },
+                            React.createElement('form', { onSubmit: handleSubmit },
+                                React.createElement('div', { className: 'form-row' },
+                                    React.createElement('div', { className: 'form-col' },
+                                        React.createElement('label', { htmlFor: 'firstName' }, 'First Name *'),
+                                        React.createElement('input', {
+                                            type: 'text',
+                                            id: 'firstName',
+                                            name: 'firstName',
+                                            value: formData.firstName,
+                                            onChange: (e) => handleInputChange('firstName', e.target.value),
+                                            className: errors.firstName ? 'error' : ''
+                                        }),
+                                        errors.firstName && React.createElement('div', { className: 'error-message' }, errors.firstName)
+                                    ),
+                                    React.createElement('div', { className: 'form-col' },
+                                        React.createElement('label', { htmlFor: 'lastName' }, 'Last Name *'),
+                                        React.createElement('input', {
+                                            type: 'text',
+                                            id: 'lastName',
+                                            name: 'lastName',
+                                            value: formData.lastName,
+                                            onChange: (e) => handleInputChange('lastName', e.target.value),
+                                            className: errors.lastName ? 'error' : ''
+                                        }),
+                                        errors.lastName && React.createElement('div', { className: 'error-message' }, errors.lastName)
+                                    )
+                                ),
+                                React.createElement('div', { className: 'form-row' },
+                                    React.createElement('div', { className: 'form-col' },
+                                        React.createElement('label', { htmlFor: 'email' }, 'Email Address *'),
+                                        React.createElement('input', {
+                                            type: 'email',
+                                            id: 'email',
+                                            name: 'email',
+                                            value: formData.email,
+                                            onChange: (e) => handleInputChange('email', e.target.value),
+                                            className: errors.email ? 'error' : ''
+                                        }),
+                                        errors.email && React.createElement('div', { className: 'error-message' }, errors.email)
+                                    ),
+                                    React.createElement('div', { className: 'form-col' },
+                                        React.createElement('label', { htmlFor: 'phone' }, 'Phone Number'),
+                                        React.createElement('input', {
+                                            type: 'tel',
+                                            id: 'phone',
+                                            name: 'phone',
+                                            value: formData.phone,
+                                            onChange: (e) => handleInputChange('phone', e.target.value)
+                                        })
+                                    )
+                                ),
+                                React.createElement('div', { className: 'form-row' },
+                                    React.createElement('div', { className: 'form-col' },
+                                        React.createElement('label', { htmlFor: 'company' }, 'Company/Organization'),
+                                        React.createElement('input', {
+                                            type: 'text',
+                                            id: 'company',
+                                            name: 'company',
+                                            value: formData.company,
+                                            onChange: (e) => handleInputChange('company', e.target.value)
+                                        })
+                                    ),
+                                    React.createElement('div', { className: 'form-col' },
+                                        React.createElement('label', { htmlFor: 'jobTitle' }, 'Job Title'),
+                                        React.createElement('input', {
+                                            type: 'text',
+                                            id: 'jobTitle',
+                                            name: 'jobTitle',
+                                            value: formData.jobTitle,
+                                            onChange: (e) => handleInputChange('jobTitle', e.target.value)
+                                        })
+                                    )
+                                ),
+                                React.createElement('div', { className: 'navigation-buttons' },
+                                    React.createElement('button', {
+                                        type: 'submit',
+                                        className: 'btn-primary'
+                                    }, 'View Results')
+                                )
+                            )
                         )
                     )
                 )
@@ -957,11 +1200,153 @@
         const App = () => {
             const [currentView, setCurrentView] = useState('landing');
 
+            // All categories with their questions
+            const categories = [
+                {
+                    id: 1,
+                    name: "Leadership",
+                    questions: [
+                        "Leaders clearly communicate our organisation's vision and direction.",
+                        "Managers encourage experimentation and accept mistakes as part of learning.",
+                        "Leaders actively develop people's skills and careers.",
+                        "My manager provides regular, constructive feedback.",
+                        "Decision-making authority is delegated to the appropriate level.",
+                        "Leadership behaviour matches the organisation's stated values.",
+                        "Leaders create an environment where diverse perspectives are valued.",
+                        "Leaders demonstrate transparency and honesty in their communication.",
+                        "I see leaders modelling ethical and responsible behaviour.",
+                        "Senior leaders inspire me to do my best work."
+                    ]
+                },
+                {
+                    id: 2,
+                    name: "Innovation",
+                    questions: [
+                        "Employees are encouraged to suggest new ideas and improvements.",
+                        "The organisation provides time or resources to test new ideas.",
+                        "Successful ideas are scaled beyond their initial pilot stage.",
+                        "Innovation initiatives are aligned with our strategic priorities.",
+                        "We celebrate successes and learn openly from failures.",
+                        "Cross-functional teams collaborate effectively on innovation projects.",
+                        "We move quickly from idea to testing to implementation.",
+                        "Innovation is seen as everyone's responsibility, not just R&D.",
+                        "Leaders actively remove barriers to innovation.",
+                        "Our organisation has a clear process for measuring innovation impact."
+                    ]
+                },
+                {
+                    id: 3,
+                    name: "Culture",
+                    questions: [
+                        "People at all levels feel safe to voice opinions without fear of reprisal.",
+                        "Collaboration across departments is encouraged and supported.",
+                        "Our workplace environment supports diversity and inclusion.",
+                        "Recognition is given fairly and frequently for good work.",
+                        "There is a strong sense of shared purpose across the organisation.",
+                        "We respond well to change and adapt quickly.",
+                        "There is open, transparent communication between levels and teams.",
+                        "People feel engaged and motivated to contribute their best.",
+                        "Our culture promotes both high performance and well-being.",
+                        "We hold ourselves accountable for our results."
+                    ]
+                },
+                {
+                    id: 4,
+                    name: "AI Readiness",
+                    questions: [
+                        "People here see AI as a tool to achieve breakthroughs, not just to save time and write emails.",
+                        "Our teams use AI to tackle serious business challenges and seize major opportunities.",
+                        "We actively invest in AI projects that aim for 10× improvements in performance or outcomes.",
+                        "Employees are encouraged and supported to design AI-powered solutions, not only use prebuilt tools.",
+                        "Leadership challenges us to think boldly about how AI can transform our products, services, and processes.",
+                        "We measure AI initiatives by the real impact they deliver (e.g. improvements in revenue, productivity, customer experience) not just activity.",
+                        "AI projects are embedded in our strategic priorities and linked to clear business goals.",
+                        "People feel confident using AI to innovate, experiment, and disrupt how work is done.",
+                        "Our organisation develops the skills and mindsets needed to lead in an AI-driven future.",
+                        "We openly share success stories where AI has delivered major gains or solved difficult problems."
+                    ]
+                },
+                {
+                    id: 5,
+                    name: "Future Growth & Learning",
+                    questions: [
+                        "The organisation invests in developing new skills for the future.",
+                        "We are encouraged to learn and adapt continuously.",
+                        "Career pathways are clear and future-focused.",
+                        "Employees are supported to reskill for emerging technologies.",
+                        "Leadership prioritises long-term development over short-term gains.",
+                        "We benchmark ourselves against industry best practices.",
+                        "People are rewarded for curiosity and lifelong learning.",
+                        "We regularly scan the external environment for new trends.",
+                        "Employees feel confident about the organisation's future direction.",
+                        "Our culture motivates people to grow beyond their current roles."
+                    ]
+                }
+            ];
+
+            const calculateScores = (answers) => {
+                const categoryScores = categories.map(category => {
+                    const categoryAnswers = Object.entries(answers || {})
+                        .filter(([key, value]) => {
+                            // Parse global question index from key (format: "globalIndex")
+                            const questionIndex = parseInt(key);
+                            const categoryStart = categories.slice(0, category.id - 1)
+                                .reduce((sum, cat) => sum + cat.questions.length, 0);
+                            const categoryEnd = categoryStart + category.questions.length;
+                            return questionIndex >= categoryStart && questionIndex < categoryEnd;
+                        })
+                        .map(([_, value]) => value);
+
+                    const totalScore = categoryAnswers.reduce((sum, score) => sum + score, 0);
+                    const maxScore = category.questions.length * 5;
+                    const percentage = categoryAnswers.length > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
+
+                    return {
+                        category: category.name,
+                        total: totalScore,
+                        max: maxScore,
+                        percentage: percentage,
+                        average: categoryAnswers.length > 0 ? Math.round((totalScore / categoryAnswers.length) * 10) / 10 : 0,
+                        questionCount: categoryAnswers.length
+                    };
+                });
+
+                const overallTotal = Object.values(answers || {}).reduce((sum, score) => sum + score, 0);
+                const totalQuestions = categories.reduce((sum, cat) => sum + cat.questions.length, 0);
+                const overallPercentage = Math.round((overallTotal / (totalQuestions * 5)) * 100);
+
+                return {
+                    categories: categoryScores,
+                    overall: {
+                        total: overallTotal,
+                        max: totalQuestions * 5,
+                        percentage: overallPercentage,
+                        average: Math.round((overallTotal / totalQuestions) * 10) / 10
+                    }
+                };
+            };
+
+            const getScoreInterpretation = (percentage) => {
+                if (percentage >= 90) return "Exceptional";
+                if (percentage >= 80) return "Strong";
+                if (percentage >= 70) return "Good";
+                if (percentage >= 60) return "Developing";
+                return "Emerging";
+            };
+
             const handleStartSurvey = () => {
                 setCurrentView('survey');
             };
 
             const handleSurveyComplete = () => {
+                setCurrentView('additionalQuestions');
+            };
+
+            const handleAdditionalQuestionsComplete = () => {
+                setCurrentView('userDetails');
+            };
+
+            const handleUserDetailsComplete = () => {
                 setCurrentView('results');
             };
 
@@ -973,36 +1358,80 @@
                 switch (currentView) {
                     case 'survey':
                         return React.createElement('div', { className: 'app' },
-                            React.createElement(Survey, { onComplete: handleSurveyComplete })
+                            React.createElement(Survey, { onComplete: handleSurveyComplete, categories: categories })
+                        );
+
+                    case 'additionalQuestions':
+                        return React.createElement('div', { className: 'app' },
+                            React.createElement(AdditionalQuestions, { onComplete: handleAdditionalQuestionsComplete })
+                        );
+
+                    case 'userDetails':
+                        return React.createElement('div', { className: 'app' },
+                            React.createElement(UserDetails, { onComplete: handleUserDetailsComplete })
                         );
 
                     case 'results':
+                        // Get answers from localStorage
+                        const savedAnswers = JSON.parse(localStorage.getItem('surveyAnswers') || '{}');
+                        const scores = calculateScores(savedAnswers);
                         return React.createElement('div', { className: 'app' },
-                            React.createElement('main', { className: 'hero-section' },
-                                React.createElement('div', { className: 'logo-section' },
-                                    React.createElement('img', {
-                                        src: 'images/logo.svg',
-                                        alt: '21st Century Leadership Logo',
-                                        className: 'logo'
-                                    })
-                                ),
-                                React.createElement('div', { className: 'hero-content' },
-                                    React.createElement('h1', { className: 'hero-title' }, 'Assessment Complete!'),
-                                    React.createElement('p', { className: 'completion-message' },
-                                        'Thank you for completing the 21st Century Leadership Assessment. Your results have been calculated and saved.'
+                            React.createElement('div', { className: 'logo-section' },
+                                React.createElement('img', {
+                                    src: 'images/logo.svg',
+                                    alt: '21st Century Leadership Logo',
+                                    className: 'logo'
+                                })
+                            ),
+                            React.createElement('div', { className: 'survey-container' },
+                                React.createElement('div', { className: 'results-container' },
+                                    React.createElement('h2', null, 'Assessment Complete!'),
+                                    React.createElement('div', { className: 'overall-score' },
+                                        React.createElement('div', { className: 'score-circle' },
+                                            React.createElement('span', { className: 'score-percentage' }, scores.overall.percentage + '%'),
+                                            React.createElement('span', { className: 'score-label' }, 'Overall Score')
+                                        ),
+                                        React.createElement('div', { className: 'score-details' },
+                                            React.createElement('p', null, 'Total Score: ' + scores.overall.total + '/' + scores.overall.max),
+                                            React.createElement('p', null, 'Average Score: ' + scores.overall.average + '/5')
+                                        )
                                     ),
-                                    React.createElement('div', { className: 'image-banner' },
-                                        React.createElement('img', {
-                                            src: 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80',
-                                            alt: 'Success and achievement',
-                                            className: 'banner-image'
-                                        })
+                                    React.createElement('div', { className: 'category-scores' },
+                                        React.createElement('h3', null, 'Category Breakdown:'),
+                                        scores.categories.map((cat, index) =>
+                                            React.createElement('div', { key: cat.category + index, className: 'category-result' },
+                                                React.createElement('div', { className: 'category-header' },
+                                                    React.createElement('h4', null, 'Category ' + (index + 1) + ': ' + cat.category),
+                                                    React.createElement('span', { className: 'category-percentage' }, cat.percentage + '%')
+                                                ),
+                                                React.createElement('div', { className: 'category-bar' },
+                                                    React.createElement('div', {
+                                                        className: 'category-fill',
+                                                        style: { width: Math.max(cat.percentage, 2) + '%' }
+                                                    })
+                                                ),
+                                                React.createElement('div', { className: 'category-stats' },
+                                                    React.createElement('span', null, 'Score: ' + cat.total + '/' + cat.max),
+                                                    React.createElement('span', null, 'Avg: ' + cat.average + '/5'),
+                                                    React.createElement('span', null, getScoreInterpretation(cat.percentage))
+                                                )
+                                            )
+                                        )
                                     ),
                                     React.createElement('div', { className: 'action-buttons' },
                                         React.createElement('button', {
-                                            className: 'start-survey-btn',
+                                            className: 'btn-secondary',
+                                            onClick: () => {
+                                                localStorage.removeItem('surveyAnswers');
+                                                localStorage.removeItem('additionalAnswers');
+                                                localStorage.removeItem('userDetails');
+                                                setCurrentView('landing');
+                                            }
+                                        }, 'Take Assessment Again'),
+                                        React.createElement('button', {
+                                            className: 'btn-primary',
                                             onClick: handleBackToHome
-                                        }, 'Take Another Survey')
+                                        }, 'Back to Home')
                                     )
                                 )
                             )
